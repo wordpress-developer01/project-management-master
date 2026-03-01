@@ -1,0 +1,27 @@
+# Node
+node_modules/
+
+# build
+dist/
+build/
+.next/
+.out/
+
+# env
+.env
+.env.local
+
+# misc
+.DS_Store
+.vscode/
+.idea/
+
+# logs
+*.log
+logs/
+
+# coverage
+coverage/
+
+# TypeScript
+*.tsbuildinfo

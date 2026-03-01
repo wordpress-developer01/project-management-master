@@ -1,0 +1,27 @@
+# Node
+node_modules/
+
+# build
+dist/
+build/
+
+# env
+.env
+.env.local
+
+# logs
+logs/
+*.log
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# coverage
+coverage/
+
+# TypeScript
+*.tsbuildinfo
