@@ -22,6 +22,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
+app.get("/health", (_req, res) => res.status(200).send("ok"));
+
 /* ROUTES */
 app.get("/", (req, res) => {
   res.send("This is home route");
@@ -39,6 +41,5 @@ app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on part ${port}`);
 });
 
-app.get("/", (req, res) => {
-  res.send("API is running");
-});
+process.on("unhandledRejection", (err) => console.error("unhandledRejection", err));
+process.on("uncaughtException", (err) => console.error("uncaughtException", err));
