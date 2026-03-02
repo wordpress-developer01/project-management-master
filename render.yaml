@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: project-management-server
+    env: node
+    plan: free
+    root: server
+    buildCommand: "npm install && npm run build"
+    startCommand: "npm start"
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        value: ""
+  - type: web
+    name: project-management-client
+    env: node
+    plan: free
+    root: client
+    buildCommand: "npm install && npm run build"
+    startCommand: "npm run start"
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        value: ""

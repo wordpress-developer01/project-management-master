@@ -1,15 +1,17 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../prismaClient";
 
 export const getTasks = async (req: Request, res: Response): Promise<void> => {
   const { projectId } = req.query;
   try {
+    const whereClause: any = {};
+    const pid = Number(projectId);
+    if (!Number.isNaN(pid)) {
+      whereClause.projectId = pid;
+    }
+
     const tasks = await prisma.task.findMany({
-      where: {
-        projectId: Number(projectId),
-      },
+      where: whereClause,
       include: {
         author: true,
         assignee: true,
@@ -52,10 +54,10 @@ export const createTask = async (
         tags,
         startDate,
         dueDate,
-        points,
-        projectId,
-        authorUserId,
-        assignedUserId,
+        points: points !== undefined ? Number(points) : undefined,
+        projectId: Number(projectId),
+        authorUserId: Number(authorUserId),
+        assignedUserId: assignedUserId ? Number(assignedUserId) : undefined,
       },
     });
     res.status(201).json(newTask);

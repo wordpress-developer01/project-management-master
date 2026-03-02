@@ -12,10 +12,7 @@ import userRoutes from "./routes/userRoutes";
 import teamRoutes from "./routes/teamRoutes";
 
 /* CONFIGURATIONS */
-
-if (process.env.NODE_ENV !== "production") {
-  dotenv.config();
-}
+dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(helmet());
@@ -24,8 +21,6 @@ app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
-
-app.get("/health", (_req, res) => res.status(200).send("ok"));
 
 /* ROUTES */
 app.get("/", (req, res) => {
@@ -41,8 +36,5 @@ app.use("/teams", teamRoutes);
 /* SERVER */
 const port = Number(process.env.PORT) || 3000;
 app.listen(port, "0.0.0.0", () => {
-  console.log(`Server running on part ${port}`);
+  console.log(`Server running on port ${port}`);
 });
-
-process.on("unhandledRejection", (err) => console.error("unhandledRejection", err));
-process.on("uncaughtException", (err) => console.error("uncaughtException", err));

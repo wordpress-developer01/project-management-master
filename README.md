@@ -78,3 +78,32 @@ Ensure you have these tools installed:
   ```sql
   SELECT setval(pg_get_serial_sequence('"[DATA_MODEL_NAME_HERE]"', 'id'), coalesce(max(id)+1, 1), false) FROM "[DATA_MODEL_NAME_HERE]";
   ```
+
+## Развертывание на Render (быстрая инструкция)
+
+Ниже — минимальные шаги, чтобы развернуть backend и frontend этого репозитория как два сервиса на Render.
+
+1) Добавлен файл `render.yaml` в корне репозитория; он описывает два сервиса:
+   - `project-management-server` (папка `server`) — Node/Express API
+   - `project-management-client` (папка `client`) — Next.js фронтенд
+
+2) Что проверить/установить в Render Dashboard:
+   - Создать новый сервис и подключить репозиторий (либо импортировать через `render.yaml`).
+   - Для сервиса `server` установить переменные окружения:
+     - `DATABASE_URL` — строка подключения к вашей базе (Postgres)
+     - `NODE_ENV=production`
+     - При необходимости изменить `PORT` (по умолчанию в `render.yaml` — 3000)
+   - Для сервиса `client` при необходимости установить `NEXT_PUBLIC_API_URL` на адрес API (например, `https://your-backend.onrender.com`).
+
+3) Команды сборки и старта (уже прописаны в `render.yaml`):
+   - Backend: `npm install && npm run build` -> `npm start` (в папке `server`)
+   - Frontend: `npm install && npm run build` -> `npm run start` (в папке `client`)
+
+4) Node.js версия: в `server/package.json` и `client/package.json` указано `engines.node: "18.x"` — Render использует это как подсказку.
+
+5) После деплоя проверьте логи Render и откройте URL сервиса. Если фронтенд не видит API — обновите `NEXT_PUBLIC_API_URL`.
+
+Если хотите, могу:
+- добавить пример `render.yaml` со значениями конкретной ветки/репозитория;
+- либо подготовить Dockerfile для монолитного деплоя (если предпочтительнее один сервис).
+

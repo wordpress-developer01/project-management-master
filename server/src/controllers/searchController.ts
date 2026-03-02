@@ -1,16 +1,15 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../prismaClient";
 
 export const search = async (req: Request, res: Response): Promise<void> => {
   const { query } = req.query;
+  const q = typeof query === "string" ? query : String(query || "");
   try {
     const tasks = await prisma.task.findMany({
       where: {
         OR: [
-          { title: { contains: query as string } },
-          { description: { contains: query as string } },
+          { title: { contains: q } },
+          { description: { contains: q } },
         ],
       },
     });
@@ -18,15 +17,15 @@ export const search = async (req: Request, res: Response): Promise<void> => {
     const projects = await prisma.project.findMany({
       where: {
         OR: [
-          { name: { contains: query as string } },
-          { description: { contains: query as string } },
+          { name: { contains: q } },
+          { description: { contains: q } },
         ],
       },
     });
 
     const users = await prisma.user.findMany({
       where: {
-        OR: [{ username: { contains: query as string } }],
+        OR: [{ username: { contains: q } }],
       },
     });
     res.json({ tasks, projects, users });
