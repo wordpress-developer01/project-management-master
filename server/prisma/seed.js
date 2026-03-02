@@ -1,20 +1,13 @@
-import { PrismaClient } from "@prisma/client";
-import fs from "fs";
-import path from "path";
-import dotenv from "dotenv";
-
-
-dotenv.config();
+const { PrismaClient } = require("@prisma/client");
+const fs = require("fs");
+const path = require("path");
+require("dotenv").config();
 
 const prisma = new PrismaClient();
 
-/**
- * Maps filenames like "projectTeam.json" -> prisma.projectTeam
- * (lowercase first letter)
- */
 function fileToPrismaDelegateName(fileName) {
-  const base = path.basename(fileName, path.extname(fileName)); // projectTeam
-  return base.charAt(0).toLowerCase() + base.slice(1);          // projectTeam
+  const base = path.basename(fileName, path.extname(fileName));
+  return base.charAt(0).toLowerCase() + base.slice(1);
 }
 
 async function deleteAllData(orderedFileNames) {
@@ -67,7 +60,7 @@ async function seedFromFiles(orderedFileNames, dataDirectory) {
       }
       console.log(`[seed] Seeded ${delegateName} with data from ${fileName}`);
     } catch (error) {
-      console.error(`[seed] Error seeding ${delegateName} from ${fileName}:`, error);
+      console.error(`[seed] Error seeding ${delegateName}:`, error);
     }
   }
 }
@@ -88,10 +81,7 @@ async function main() {
 
   console.log("[seed] Using seedData directory:", dataDirectory);
 
-  // Delete in reverse order to avoid FK constraint issues
   await deleteAllData([...orderedFileNames].reverse());
-
-  // Then insert in the intended order
   await seedFromFiles(orderedFileNames, dataDirectory);
 }
 
