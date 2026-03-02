@@ -76,7 +76,9 @@ export interface Team {
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+    // Support both variable names: historically we used NEXT_PUBLIC_API_URL in examples,
+    // some environments may provide NEXT_PUBLIC_API_BASE_URL. Use either if present.
+    baseUrl: process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "",
     prepareHeaders: async (headers) => {
       const session = await fetchAuthSession();
       const { accessToken } = session.tokens ?? {};
@@ -103,7 +105,31 @@ export const api = createApi({
 
           return { data: { user, userSub, userDetails } };
         } catch (error: any) {
-          return { error: error.message || "Could not fetch user data" };
+          // Fallback for local development when Cognito / Amplify is not configured.
+          // If a mock user exists in sessionStorage (set by the local AuthProvider mock),
+          // use that to create/lookup a user in the backend and return that as the auth user.
+          try {
+            if (typeof window === "undefined") throw new Error("No window");
+            const raw = sessionStorage.getItem("mockUser");
+            if (!raw) throw new Error("No mock user");
+            const mockUser = JSON.parse(raw);
+            // choose a stable cognitoId for mock users (use email or username)
+            const userSub = mockUser?.attributes?.email || mockUser?.username || "localdev";
+
+            // Try to ensure a backend user exists for this mock identity. Ignore failures.
+            try {
+              await fetchWithBQ({ url: `users`, method: "POST", body: { username: mockUser.username || userSub, cognitoId: userSub } });
+            } catch (e) {
+              // ignore create errors (user may already exist)
+            }
+
+            const userDetailsResponse = await fetchWithBQ(`users/${userSub}`);
+            const userDetails = userDetailsResponse.data as User;
+
+            return { data: { user: mockUser, userSub, userDetails } };
+          } catch (fallbackError: any) {
+            return { error: (error && error.message) || fallbackError.message || "Could not fetch user data" };
+          }
         }
       },
     }),
