@@ -20,7 +20,6 @@ if (isConfigured) {
       Cognito: {
         userPoolId: cognitoConfig.userPoolId!,
         userPoolClientId: cognitoConfig.userPoolClientId!,
-        region: cognitoConfig.region!,
       },
     },
   });
