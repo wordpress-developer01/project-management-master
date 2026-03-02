@@ -25,3 +25,9 @@ services:
         value: production
       - key: NEXT_PUBLIC_API_URL
         value: ""
+      - key: NEXT_PUBLIC_COGNITO_REGION
+        value: ""
+      - key: NEXT_PUBLIC_COGNITO_USER_POOL_ID
+        value: ""
+      - key: NEXT_PUBLIC_COGNITO_USER_POOL_CLIENT_ID
+        value: ""
