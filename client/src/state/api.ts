@@ -78,7 +78,7 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     // Support both variable names: historically we used NEXT_PUBLIC_API_URL in examples,
     // some environments may provide NEXT_PUBLIC_API_BASE_URL. Use either if present.
-    baseUrl: process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "",
+    baseUrl: process.env.NEXT_PUBLIC_API_URL || "https://project-management-master.onrender.com",
     prepareHeaders: async (headers) => {
       const session = await fetchAuthSession();
       const { accessToken } = session.tokens ?? {};
