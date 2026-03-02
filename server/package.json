@@ -11,7 +11,7 @@
     "migrate:deploy": "prisma migrate deploy",
     "postinstall": "prisma generate",
     "build": "rimraf dist && npx tsc",
-  "start": "npm run migrate:deploy && node dist/index.js",
+    "start": "npm run migrate:deploy && node dist/index.js",
     "dev": "npm run build && concurrently \"npx tsc -w\" \"nodemon --exec ts-node src/index.ts\"",
     "seed": "node prisma/seed.js"
   },
