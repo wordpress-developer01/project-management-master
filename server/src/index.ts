@@ -12,7 +12,10 @@ import userRoutes from "./routes/userRoutes";
 import teamRoutes from "./routes/teamRoutes";
 
 /* CONFIGURATIONS */
-dotenv.config();
+
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
 const app = express();
 app.use(express.json());
 app.use(helmet());
