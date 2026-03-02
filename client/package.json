@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "rimraf dist && npx tsc",
+    "start": "node dist/src/index.js",
     "lint": "next lint"
   },
   "dependencies": {
